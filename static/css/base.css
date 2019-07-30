@@ -1,4 +1,36 @@
 html, body {
         background-color: #f8f8f8;
         color: #222;
+        line-height: 1.6;
+        font-family: "lato"
+}
+
+.header, .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+}
+
+.header {
+        min-height: 200px;
+        max-height: 25vh;
+        padding-top: 5rem;
+}
+
+.header .title {
+        font-size: 1.6rem;
+        letter-spacing: 0.1rem;
+}
+
+.header .description {
+        margin: 0.5rem;
+        font-size: 0.9rem;
+        color: #888;
+}
+
+.content {
+        margin: 0 auto;
+        max-width: 80ch;
+        word-wrap: anywhere;
 }

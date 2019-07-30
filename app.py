@@ -33,7 +33,7 @@ def handle_404(error):
 
 @app.route("/")
 def route_index():
-        html = """おはようございます"""
+        html = """%s""" % ("".join([x*80 for x in list("0123456789")]))
         html = render_template("base.html.jinja", data = {
                 "content" : html
                 })
