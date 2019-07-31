@@ -52,8 +52,8 @@ def read_post(path):
                         parse_headers = True
                 while parse_headers:
                         line_index += 1
+                        line = data[line_index]
                         if line:
-                                line = data[line_index]
                                 if line == keywords["HEADER_TAIL"]:
                                         parse_headers = False
                                         line_index += 1
