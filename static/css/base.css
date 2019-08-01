@@ -2,7 +2,7 @@ html, body {
         background-color: #f8f8f8;
         color: #222;
         line-height: 1.6;
-        font-family: "lato"
+        font-family: "lato", "Noto Sans JP"
 }
 
 .header, .content {

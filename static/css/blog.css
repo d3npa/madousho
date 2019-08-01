@@ -9,9 +9,10 @@
 }
 
 .content pre {
+        font-family: Hack, monospace;
+        line-height: 1;
         background-color: #222;
         color: #f8f8f8;
-        font-style: monospace;
         padding: 1.0rem;
         white-space: wrap;
         overflow-x: scroll;
@@ -19,6 +20,9 @@
 }
 
 .content p > code {
+        font-family: Hack, monospace;
+        line-height: 1;
+        font-size: .8em;
         background-color: #e8e8e8;
         color: #222;
         padding: .2em;
@@ -35,4 +39,12 @@
         padding: .2em;
         background-color: #AA8CC5;
         color: #f8f8f8;
+}
+
+.content blockquote {
+        margin: 0;
+        padding: .2em 1.5em .2em 2em;
+        border-left: .5em solid #AA8CC5;
+        background-color: #f4f4f4;
+        color: #222;
 }
