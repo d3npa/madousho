@@ -40,20 +40,32 @@ def route_index():
 
 @app.route("/<path:path>")
 def catch_all(path):
-        path = path.split("/")
-        if len(path) >= 2:
-                if path[0] in ["css", "js"]:
-                        return get_resource("/".join(path))
-        abort(404)
-
-def get_resource(resource):
-        path = root + "/static/" + lib.safe_path(resource)
-        if os.path.exists(path):
-                response = Response("", 200)
-                response.set_data(lib.read_file(path))
-                response.headers["Content-Type"] = "%s; charset=UTF-8" % lib.guess_mime(path)
-                return response
+        if len(path.split("/")) >= 2:
+                head = path.split("/")[0]
+                if head in ["css", "js"]:
+                        path = root + "/static/" + lib.safe_path(path)
+                        if os.path.exists(path):
+                                response = Response("", 200)
+                                response.set_data(lib.read_file(path))
+                                response.headers["Content-Type"] = "%s; charset=UTF-8" % lib.guess_mime(path)
+                                return response
+                elif head == "post":
+                        path = root + "/content/" + lib.safe_path(path[5:])
+                        if os.path.exists(path):
+                                response = Response("", 200)
+                                extension = path.split(".")[-1]
+                                if extension in ["md", "markdown"]:
+                                        post = lib.read_post(path)
+                                        post.update({"contents" : markdown.markdown(post["contents"], extensions=['extra'])})
+                                        response.set_data(render_template("post.html.jinja", data = post))
+                                        response.headers["Content-Type"] = "text/html; charset=UTF-8"
+                                elif extension in ["png", "jpg", "pdf", "mp3", "mp4"]:
+                                        response.set_data(lib.read_file(path))
+                                        response.headers["Content-Type"] = "%s; charset=UTF-8" % lib.guess_mime(path)
+                                else:
+                                        abort(404)
+                                return response
         abort(404)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port="5000")
