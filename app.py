@@ -33,10 +33,9 @@ def handle_404(error):
 
 @app.route("/")
 def route_index():
-        html = """%s""" % ("".join([x*80 for x in list("0123456789")]))
-        html = render_template("base.html.jinja", data = {
-                "content" : html
-                })
+        # html = """%s""" % ("".join([x*80 for x in list("0123456789")]))
+        post = lib.read_post(root + "/content/test.md")
+        html = render_template("post.html.jinja", data = post)
         return html
 
 @app.route("/<path:path>")
