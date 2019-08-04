@@ -1,7 +1,19 @@
 {% extends "base.html.jinja" %}
 {% block content %}
-<div>
-{{ data.headers.Date }}
-{{ data.contents }}
+{% for post in data %}
+<div class="post">
+        <div class="date">
+        {{ post.headers.Date }}
+        </div>
+        <div class="title">
+                <a href="{{ post.link }}">
+                {{ post.headers.Title }}
+                </a>
+        </div>
+        <div class="contents">
+        {{ post.contents }}
+        </div>
+<hr>
 </div>
+{% endfor %}
 {% endblock content %}

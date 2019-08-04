@@ -48,3 +48,27 @@
         background-color: #f4f4f4;
         color: #222;
 }
+
+.content hr {
+        color: #aaa;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+}
+
+.content .date {
+        color: #888;
+}
+
+.content .title {
+        color: #222;
+        font-size: 1.5rem;
+}
+
+.content .title a {
+        color: #222;
+}
+
+.content .title a:hover {
+        color: #f8f8f8;
+        background-color: #222;
+}

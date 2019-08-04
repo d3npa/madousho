@@ -3,11 +3,11 @@
 from flask import Flask, Response, render_template, abort, request, redirect
 from mimetypes import guess_type as guess_mime
 from werkzeug.utils import secure_filename
-import sys, os, time, markdown, lib
+import sys, os, time, lib
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
-root = os.path.realpath(__file__)[:-len("/app.py")]
+lib.root = os.path.realpath(__file__)[:-len("/app.py")]
 
 # エラーを除きデフォルトログを無効化する
 import logging
@@ -33,9 +33,8 @@ def handle_404(error):
 
 @app.route("/")
 def route_index():
-        # html = """%s""" % ("".join([x*80 for x in list("0123456789")]))
-        post = lib.read_post(root + "/content/test.md")
-        html = render_template("post.html.jinja", data = post)
+        posts = lib.recent_posts()
+        html = render_template("post.html.jinja", data = posts)
         return html
 
 @app.route("/<path:path>")
@@ -43,20 +42,19 @@ def catch_all(path):
         if len(path.split("/")) >= 2:
                 head = path.split("/")[0]
                 if head in ["css", "js"]:
-                        path = root + "/static/" + lib.safe_path(path)
+                        path = lib.root + "/static/" + lib.safe_path(path)
                         if os.path.exists(path):
                                 response = Response("", 200)
                                 response.set_data(lib.read_file(path))
                                 response.headers["Content-Type"] = "%s; charset=UTF-8" % lib.guess_mime(path)
                                 return response
                 elif head == "post":
-                        path = root + "/content/" + lib.safe_path(path[5:])
+                        path = lib.root + "/content/" + lib.safe_path(path[5:])
                         if os.path.exists(path):
                                 response = Response("", 200)
                                 extension = path.split(".")[-1]
                                 if extension in ["md", "markdown"]:
                                         post = lib.read_post(path)
-                                        post.update({"contents" : markdown.markdown(post["contents"], extensions=['extra'])})
                                         response.set_data(render_template("post.html.jinja", data = post))
                                         response.headers["Content-Type"] = "text/html; charset=UTF-8"
                                 elif extension in ["png", "jpg", "pdf", "mp3", "mp4"]:

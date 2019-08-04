@@ -3,12 +3,13 @@ from flask import request
 from werkzeug.utils import secure_filename
 from string import printable
 from mimetypes import guess_type
-import re
+import re, os, markdown, time
 
 # https://stackoverflow.com/a/93029
 control_chars = "".join(map(chr, list(range(0,32)) + list(range(127,160))))
 re_no_cc = re.compile("[%s]" % re.escape(control_chars))
 
+root = ""
 keywords = {
         "HEADER_HEAD" : "START_HEADERS",
         "HEADER_TAIL" : "END_HEADERS"
@@ -61,7 +62,40 @@ def read_post(path):
                                 line = line.split(": ")
                                 headers.update({line[0] : line[1]})
                 contents = "\n".join(data[line_index:])
-        return {
+        # print(root, path)
+        return [{
+                "link" : path.replace(root + "/content/", "/post/"),
                 "headers" : headers,
-                "contents" : contents
-        }
+                "contents" : markdown.markdown(contents, extensions=['extra'])
+        }]
+
+def recent_posts(directory=""):
+        files = []
+        directory = root + "/content" + directory
+        def discover_files(directory, files):
+                for file in os.listdir(directory):
+                        file = "/".join([directory, file])
+                        if os.path.isfile(file) and file[-3:] == ".md":
+                                files.append(file)
+                        if os.path.isdir(file):
+                                discover_files(file, files)
+        def order_file(file):
+                with open(file, "r") as f:
+                        if f.readline()[:-1] == keywords["HEADER_HEAD"]:
+                                post = read_post(file)[0]
+                                if "headers" in post and "Date" in post["headers"]:
+                                        try:
+                                                return -time.mktime(time.strptime(post["headers"]["Date"], "%Y/%m/%d"))
+                                        except ValueError:
+                                                print("(%s)「Date」ヘッダーをパースできませんでした（形式の問題？）" % file)
+                                                return 0
+                        return 0
+        discover_files(directory, files)
+        files = sorted(files, key=order_file)
+        posts = []
+        for file in files[:5]:
+                post = read_post(file)
+                path = file[len(directory):-len(file.split("/")[-1])]                                           # ルートとファイル名を含めず
+                post[0]["contents"] = post[0]["contents"].replace("src=\".res/", "src=\"/post%s.res/" % path)   # 画像リンクを修正する
+                posts += post
+        return posts

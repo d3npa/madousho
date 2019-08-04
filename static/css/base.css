@@ -29,6 +29,11 @@ html, body {
         color: #888;
 }
 
+.header .title:hover {
+        cursor: pointer;
+        color: #444;
+}
+
 .content {
         margin: 0 auto;
         max-width: 80ch;
