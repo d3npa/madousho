@@ -19,10 +19,10 @@
         overflow-wrap: none;
 }
 
-.content p > code {
+.content p > code, li > code {
         font-family: Hack, monospace;
         line-height: 1;
-        font-size: .8em;
+        font-size: .7em;
         background-color: #e8e8e8;
         color: #222;
         padding: .2em;
